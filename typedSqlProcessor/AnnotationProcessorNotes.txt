@@ -1,0 +1,99 @@
+INPUT TYPES:
+
+TypeMirror is interface that represents a *reference* to a type.
+    - These may or may not have generic arguments filled in. Use Types#getDeclaredType to fill in generics.
+    - Implementations:
+        - ArrayType (arrays)
+        - DeclaredType (classes and interfaces)
+            - #asElement (returns TypeElement)
+            - #getTypeArguments (returns TypeParameterElement)
+            - from Types#getDeclaredType(TypeElement, TypeMirror...) (filling in generics)
+        - ExecutableType (methods)
+            - #getParameterTypes()
+            - #getReturnType()
+            - #getThrownTypes()
+            - #getTypeVariables()
+            - from `Types#asMemberOf(DeclaredType, Element)`
+        - NoType (void)
+        - NullType (null)
+        - PrimitiveType (primitives)
+        - TypeVariable (type parameters aka generic arguments)
+            - #asElement
+            - useful TypeVariableName#get
+        - Etc
+            - ErrorType (typos)
+            - IntersectionType (T extends Number & Runnable)
+            - ReferenceType (classes, interfaces, ararys, variables, and null)
+            - UnionType (multi-catch)
+            - WildcardType (? extends Number)
+    - #getAnnotationMirrors
+    - #getAnnotation(Class)
+    - #getAnnotationsByType(Class)
+    - useful TypeName.get(TypeMirror)
+    - Can get `void` from `Types#getNoType(TypeKind)`
+    - Can get primitives from `Types#getPrimitiveType(TypeKind)`
+    - Can get boxed types from `Types#boxedClass(PrimitiveType)`
+    - Can get unboxed types from `Types#unboxedType(TypeMirror)`
+    - Remove generic params with `Types#erasure(TypeMirror)`
+    - Cannot get arbitrary types.
+
+AnnotationMirror is seperate for some reason
+    - from Elements#getAllAnnotationMirrors (includes inherited)
+    - from Element#getAnnotationMirrors
+    - from Element#getAnnotation(Class)
+    - from Element#getAnnotationsByType(Class)
+
+Element is interface that represents code
+    -These NEVER have generic arguments filled in. Use these to get Mirror with generics:
+        - Types#getDeclaredType(TypeElement clazz, TypeMirror...)
+        - Types#getDeclaredType(DeclaredType outerClass, TypeElement innerClass, TypeMirror...)
+        - Types#asMemberOf(DeclaredType clazz, Element method)
+    - ExecutableElement (method)
+        #getParameters
+        #getReturnType (returns TypeMirror)
+        #getTypeParameters
+    - TypeElement (class or interface)
+        - #getEnclosedElements()
+        - #getEnclosingElement()
+        - #getInterfaces()
+        - #getTypeParameterElement()
+        - #getQualifiedName()
+        - from DeclaredType#asElement
+        - from Elements#getTypeElement
+        - useful Elements#getAllMembers (includes inherited)
+        - useful Types#getDeclaredType(TypeElement, TypeMirror...) (filling in generics - returns DeclaredType/mirror)
+        - useful ClassName#get
+    - VariableElement (member, parameter, variable, etc)
+    - TypeParameterElement  (type parameters aka generic arguments)
+        - #getBounds (returns TypeMirrors)
+        - from DeclaredType#getTypeArguments
+        - useful TypeVariableName#get
+    - Etc
+        - PackageElement (namespaces)
+        - Parameterizable (generics)
+        - QualifiedNamable (???)
+    - #getAnnotationMirrors
+    - #getAnnotation(Class)
+    - #getAnnotationsByType(Class)
+    - #getSimpleName()
+
+
+OUTPUT TYPES:
+
+TypeName is an interface that is the name of a type
+    - ArrayTypeName
+        #get(ArrayType) (aka TypeMirror)
+        #of
+    - ClassTypeName
+        #bestGuess(String)
+        #get(Class)
+        #get(String package, String simpleName, String innerClassNames)
+        #get(TypeElement)
+    - ParameterizedTypeName
+        #get(ClassName, TypeName...)
+    - TypeVariableName (T extends Number)
+        #get(String name, TypeName...)
+        #get(TypeParameterElement)
+        #get(TypeVariable)
+    - WildcardTypeName (? extends Number)
+    - #get(TypeMirror)

@@ -1,0 +1,10 @@
+apply plugin: 'java-library'
+apply plugin: 'org.checkerframework'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly 'androidx.annotation:annotation:1.6.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
